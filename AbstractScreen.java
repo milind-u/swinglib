@@ -8,7 +8,9 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -86,8 +88,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
   }
 
   // No two buttons can have the same text
-  protected JButton newButton(String text, Font font, Bounds bounds,
-      Runnable onClick) {
+  protected JButton newButton(String text, Font font, Bounds bounds, Runnable onClick) {
     final var jb = new HashableButton(text);
     jb.setBounds(bounds);
     jb.setFont(font);
@@ -106,26 +107,22 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
   }
 
   protected JButton newButton(String text, int x, int y, Runnable onClick) {
-    return newButton(text, Fonts.MEDIUM,
-        new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT), onClick);
+    return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
+        onClick);
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      Bounds bounds) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
     final var jtf = new JTextField(WIDTH / 15);
     jtf.setBounds(bounds);
     jtf.setFont(Fonts.SMALL);
     return new LabeledComponent<JTextField>(jtf, label + ':', font, this);
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      int x, int y) {
-    return newTextField(label, font,
-        new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, int x, int y) {
+    return newTextField(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      int y) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, int y) {
     return newTextField(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
   }
 
@@ -138,8 +135,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return jta;
   }
 
-  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font,
-      Bounds bounds) {
+  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font, Bounds bounds) {
     final var jta = new JTextArea();
     jta.setFont(font);
     jta.setEditable(false);
@@ -177,6 +173,19 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     if (onClicks.containsKey(e.getSource())) {
       onClicks.get(e.getSource()).run();
     }
+  }
+
+  public void run(String frameTitle) {
+    final var frame = new JFrame(frameTitle);
+
+    frame.add(this);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.pack();
+    frame.setVisible(true);
+  }
+
+  public void run() {
+    run(title);
   }
 
 }
