@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,13 +41,24 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
+    private static int instances = 0;
+
+    private final int id;
+
     public HashableButton(String text) {
       super(text);
+      id = instances++;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      return (obj.getClass() == getClass())
+          && (((HashableButton) obj).id == id);
     }
 
     @Override
     public int hashCode() {
-      return getText().hashCode();
+      return Objects.hash(id);
     }
 
   }
@@ -88,7 +100,6 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return (WIDTH - width) / 2;
   }
 
-  // No two buttons can have the same text
   protected JButton newButton(String text, Font font, Bounds bounds,
       Runnable onClick) {
     final var jb = new HashableButton(text);
