@@ -9,14 +9,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Objects;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
+import javax.swing.text.DefaultCaret;
 
 /*
  * Reusable utility code for swing Screen classes that extend JPanel and are for UIs.
@@ -52,8 +55,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
 
     @Override
     public boolean equals(Object obj) {
-      return (obj.getClass() == getClass())
-          && (((HashableButton) obj).id == id);
+      return (obj.getClass() == getClass()) && (((HashableButton) obj).id == id);
     }
 
     @Override
@@ -100,8 +102,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return (WIDTH - width) / 2;
   }
 
-  protected JButton newButton(String text, Font font, Bounds bounds,
-      Runnable onClick) {
+  protected JButton newButton(String text, Font font, Bounds bounds, Runnable onClick) {
     final var jb = new HashableButton(text);
     jb.setBounds(bounds);
     jb.setFont(font);
@@ -120,26 +121,22 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
   }
 
   protected JButton newButton(String text, int x, int y, Runnable onClick) {
-    return newButton(text, Fonts.MEDIUM,
-        new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT), onClick);
+    return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
+        onClick);
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      Bounds bounds) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
     final var jtf = new JTextField(WIDTH / 15);
     jtf.setBounds(bounds);
     jtf.setFont(Fonts.SMALL);
     return new LabeledComponent<JTextField>(jtf, label, font, this);
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      int x, int y) {
-    return newTextField(label, font,
-        new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, int x, int y) {
+    return newTextField(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
   }
 
-  protected LabeledComponent<JTextField> newTextField(String label, Font font,
-      int y) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font, int y) {
     return newTextField(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
   }
 
@@ -152,23 +149,32 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return jta;
   }
 
-  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font,
-      Bounds bounds) {
+  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font, Bounds bounds) {
     final var jta = new JTextArea();
     jta.setFont(font);
     jta.setEditable(false);
     final var jsp = new JScrollPane(jta);
     jsp.setBounds(bounds);
+    final var caret = (DefaultCaret) jta.getCaret();
+    caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     add(jsp);
     return new Pair<>(jta, jsp);
   }
 
-  protected LabeledComponent<JSpinner> newSpinner(String label, Font font,
-      Bounds bounds, SpinnerModel model) {
+  protected LabeledComponent<JSpinner> newSpinner(String label, Font font, Bounds bounds,
+      SpinnerModel model) {
     final var js = new JSpinner(model);
     js.setBounds(bounds);
     js.setFont(font);
     return new LabeledComponent<>(js, label, font, this);
+  }
+
+  protected JLabel newLabel(String text, Font font, Bounds bounds) {
+    final var jl = new JLabel(text);
+    jl.setBounds(bounds);
+    jl.setFont(font);
+    add(jl);
+    return jl;
   }
 
   @Override
@@ -201,13 +207,16 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     }
   }
 
-  public void run(String frameTitle) {
-    final var frame = new JFrame(frameTitle);
+  private void initFrame(JFrame jf) {
+    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    jf.pack();
+    jf.setVisible(true);
+  }
 
-    frame.add(this);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.pack();
-    frame.setVisible(true);
+  public void run(String frameTitle) {
+    final var jf = new JFrame(frameTitle);
+    jf.add(this);
+    initFrame(jf);
   }
 
   public void run() {
