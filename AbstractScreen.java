@@ -16,9 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
 /*
@@ -36,6 +38,23 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
 
     public Bounds(int y, int width, int height) {
       super(centeredX(width), y, width, height);
+    }
+
+  }
+
+  private static class TableModel extends DefaultTableModel {
+
+    private static final long serialVersionUID = 1L;
+
+    public TableModel(Object... cols) {
+      for (var o : cols) {
+        addColumn(o);
+      }
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+      return false;
     }
 
   }
@@ -177,6 +196,38 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return jl;
   }
 
+  protected Pair<JTable, DefaultTableModel> newTable(Font font, Bounds bounds, Object... cols) {
+    final var tm = new TableModel(cols);
+
+    final var jt = new JTable(tm);
+    initTable(jt, font);
+    jt.setBounds(bounds);
+    add(jt);
+
+    return new Pair<>(jt, tm);
+  }
+
+  protected Triplet<JTable, DefaultTableModel, JScrollPane> newScrollableTable(Font font,
+      Bounds bounds, Object... cols) {
+    final var tm = new TableModel(cols);
+
+    final var jt = new JTable(tm);
+    initTable(jt, font);
+
+    final var jsp = new JScrollPane(jt);
+    jsp.setBounds(bounds);
+    add(jsp);
+
+    return new Triplet<>(jt, tm, jsp);
+  }
+
+  private void initTable(JTable jt, Font font) {
+    jt.setRowSelectionAllowed(false);
+    jt.getTableHeader().setFont(font);
+    jt.setFont(font);
+    jt.setRowHeight((int) (font.getSize() * 1.75));
+  }
+
   @Override
   public final Dimension getPreferredSize() {
     return new Dimension(WIDTH, HEIGHT);
@@ -202,8 +253,10 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (onClicks.containsKey(e.getSource())) {
-      onClicks.get(e.getSource()).run();
+    final var r = onClicks.get(e.getSource());
+    // Make sure that the key was a button with an on click, and was not mapped to a null Runnable
+    if (r != null) {
+      r.run();
     }
   }
 

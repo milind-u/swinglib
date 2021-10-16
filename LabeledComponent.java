@@ -8,7 +8,7 @@ import javax.swing.SwingConstants;
 
 public class LabeledComponent<C extends Component> extends JComponent {
 
-  private static final long serialVersionUID = 9218446090131412904L;
+  private static final long serialVersionUID = 1L;
 
   private final C component;
   private final JLabel label;
