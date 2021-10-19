@@ -8,7 +8,7 @@ public class Rand {
    * @param max One greater than the maximum possible value of the int that will be returned.
    * @return A random int from 0 up to but not including max
    */
-  public static int randInt(final int max) {
+  public static int randInt(int max) {
     return (int) (Math.random() * max);
   }
 
@@ -19,7 +19,7 @@ public class Rand {
    * @param max One greater than the maximum possible value of the int that will be returned.
    * @return A random int from min up to but not including max
    */
-  public static int randInt(final int min, final int max) {
+  public static int randInt(int min, int max) {
     return ((int) (Math.random() * (max - min)) + min);
   }
 
@@ -30,7 +30,7 @@ public class Rand {
    * @param t The array from which a random element will be returned
    * @return A random element of Class <code>T</code> from the given array
    */
-  public static <T> T randElem(final T[] t) {
+  public static <T> T randElem(T[] t) {
     return t[randInt(t.length)];
   }
 

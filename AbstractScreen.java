@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -121,6 +122,23 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return (WIDTH - width) / 2;
   }
 
+  protected static void clearTextFields(JTextField... fields) {
+    for (var jtf : fields) {
+      jtf.setText(null);
+    }
+  }
+
+  protected static boolean fieldBlank(JTextField... fields) {
+    boolean blank = false;
+    for (var jtf : fields) {
+      if (jtf.getText().isBlank()) {
+        blank = true;
+        break;
+      }
+    }
+    return blank;
+  }
+
   protected JButton newButton(String text, Font font, Bounds bounds, Runnable onClick) {
     final var jb = new HashableButton(text);
     jb.setBounds(bounds);
@@ -226,6 +244,16 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     jt.getTableHeader().setFont(font);
     jt.setFont(font);
     jt.setRowHeight((int) (font.getSize() * 1.75));
+  }
+
+  @SafeVarargs
+  public final <E> LabeledComponent<JComboBox<E>> newComboBox(String label, Font font,
+      Bounds bounds, E... items) {
+    final var jcb = new JComboBox<>(items);
+    jcb.setFont(font);
+    jcb.setBounds(bounds);
+    jcb.setBackground(Color.WHITE);
+    return new LabeledComponent<JComboBox<E>>(jcb, label, font, this);
   }
 
   @Override
