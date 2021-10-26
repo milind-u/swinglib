@@ -28,7 +28,7 @@ public class Triplet<F, S, T> extends Pair<F, S> {
 
   @Override
   public String toString() {
-    return String.format("Triplet[third=%s, first=%s, third=%s]", third, getFirst(), getSecond());
+    return String.format("Triplet[first=%s, second=%s, third=%s]", getFirst(), getSecond(), third);
   }
 
 
