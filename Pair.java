@@ -1,6 +1,6 @@
 package swinglib;
 
-public class Pair<F, S> {
+public class Pair<F, S> extends Stringer {
 
   private F first;
   private S second;
@@ -38,11 +38,6 @@ public class Pair<F, S> {
       eq &= (p.first.equals(first) && (p.second.equals(second)));
     }
     return eq;
-  }
-
-  @Override
-  public String toString() {
-    return String.format("Pair[first=%s, second=%s]", first, second);
   }
 
 }
