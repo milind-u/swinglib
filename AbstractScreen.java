@@ -166,7 +166,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     final var jtf = new JTextField(WIDTH / 15);
     jtf.setBounds(bounds);
     jtf.setFont(Fonts.SMALL);
-    return new LabeledComponent<JTextField>(jtf, label, font, this);
+    return new LabeledComponent<>(jtf, label, this);
   }
 
   protected LabeledComponent<JTextField> newTextField(String label, Font font, int x, int y) {
@@ -203,7 +203,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     final var js = new JSpinner(model);
     js.setBounds(bounds);
     js.setFont(font);
-    return new LabeledComponent<>(js, label, font, this);
+    return new LabeledComponent<>(js, label, this);
   }
 
   protected JLabel newLabel(String text, Font font, Bounds bounds) {
@@ -214,36 +214,36 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     return jl;
   }
 
-  protected Pair<JTable, DefaultTableModel> newTable(Font font, Bounds bounds, Object... cols) {
+  protected Triplet<JTable, DefaultTableModel, JScrollPane> newTable(Font font, Bounds bounds,
+      Object... cols) {
+    final var table = initTable(font, bounds, cols);
+    add(table.getThird());
+    return table;
+  }
+
+  protected Triplet<JTable, DefaultTableModel, LabeledComponent<JScrollPane>> newLabeledTable(
+      Font font, Font labelFont, String label, Bounds bounds, Object... cols) {
+    final var table = initTable(font, bounds, cols);
+    return new Triplet<>(table.getFirst(), table.getSecond(),
+        new LabeledComponent<>(table.getThird(), label, labelFont, this,
+            bounds.x - LabeledComponent.bufferedStringWidth(label, labelFont) / 2,
+            bounds.y - LabeledComponent.bufferedStringHeight(labelFont)));
+  }
+
+  private Triplet<JTable, DefaultTableModel, JScrollPane> initTable(Font font, Bounds bounds,
+      Object... cols) {
     final var tm = new TableModel(cols);
 
     final var jt = new JTable(tm);
-    initTable(jt, font);
-    jt.setBounds(bounds);
-    add(jt);
-
-    return new Pair<>(jt, tm);
-  }
-
-  protected Triplet<JTable, DefaultTableModel, JScrollPane> newScrollableTable(Font font,
-      Bounds bounds, Object... cols) {
-    final var tm = new TableModel(cols);
-
-    final var jt = new JTable(tm);
-    initTable(jt, font);
-
-    final var jsp = new JScrollPane(jt);
-    jsp.setBounds(bounds);
-    add(jsp);
-
-    return new Triplet<>(jt, tm, jsp);
-  }
-
-  private void initTable(JTable jt, Font font) {
     jt.setRowSelectionAllowed(false);
     jt.getTableHeader().setFont(font);
     jt.setFont(font);
     jt.setRowHeight((int) (font.getSize() * 1.75));
+
+    final var jsp = new JScrollPane(jt);
+    jsp.setBounds(bounds);
+
+    return new Triplet<>(jt, tm, jsp);
   }
 
   @SafeVarargs
@@ -253,7 +253,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener {
     jcb.setFont(font);
     jcb.setBounds(bounds);
     jcb.setBackground(Color.WHITE);
-    return new LabeledComponent<JComboBox<E>>(jcb, label, font, this);
+    return new LabeledComponent<>(jcb, label, this);
   }
 
   @Override
