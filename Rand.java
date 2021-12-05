@@ -2,6 +2,8 @@ package swinglib;
 
 public class Rand {
 
+  private Rand() {} // Don't let anyone instantiate
+
   /**
    * Returns a random int from 0 (inclusive) to max (exclusive)
    * 
