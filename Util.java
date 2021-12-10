@@ -8,8 +8,9 @@ public class Util {
     Log.checkGt(max, 0, "Max must be positive");
     if (i < 0) {
       i = max - i;
+    } else if (i >= max) {
+      i -= max;
     }
-    i %= max;
     return i;
   }
 

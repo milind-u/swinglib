@@ -107,6 +107,10 @@ public final class Log {
     checkOperator(a != b, "!= (ref)", a, b, args);
   }
 
+  public static void checkNotNull(Object a, Object... args) {
+    checkOperator(a != null, "!=", a, null, args);
+  }
+
   public static <T extends Comparable<T>> void checkGt(T a, T b, Object... args) {
     checkOperator(a.compareTo(b) > 0, ">", a, b, args);
   }
@@ -134,7 +138,7 @@ public final class Log {
       logHeader(severity);
       for (var o : args) {
         severity.out.print(o);
-        if (!o.equals('\n') && !o.equals("\n")) {
+        if ((o != null) && !o.equals('\n') && !o.equals("\n")) {
           severity.out.print(' ');
         }
       }
