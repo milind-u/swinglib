@@ -74,7 +74,9 @@ public final class Log {
       sb.append(o);
       sb.append(" ");
     }
-    sb.deleteCharAt(sb.length() - 1); // Remove last space
+    if (sb.length() != 0) {
+      sb.deleteCharAt(sb.length() - 1); // Remove last space
+    }
     return sb.toString();
   }
 
