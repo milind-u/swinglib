@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -84,7 +85,35 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     }
 
   }
-
+  private static class TextFieldWithPrompt extends JTextField {
+    private String prompt = "";
+    private Font font;
+    public TextFieldWithPrompt(int i) {
+      super(i);
+    }
+    public TextFieldWithPrompt(int i, String prompt) {
+      super(i);
+      this.prompt = prompt;
+    }
+    public void setPrompt(String prompt) {
+      this.prompt = prompt;
+    }
+  
+    @Override
+    protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+  
+      if (getText().isEmpty() && !(FocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == this)) {
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setBackground(Color.lightGray);
+        font = getFont().deriveFont(Font.ITALIC);
+        g2.setFont(font);
+  
+        g2.drawString(prompt, 5, font.getSize()); // figure out x, y from font's FontMetrics and size of component.
+        g2.dispose();
+      }
+    }
+  }
   private static final long serialVersionUID = 1L;
 
   public static final int WIDTH = 1300;
@@ -163,10 +192,10 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
 
   protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
-    final var jtf = new JTextField(WIDTH / 15);
+    final var jtf = new TextFieldWithPrompt(WIDTH / 15, label);
     jtf.setBounds(bounds);
-    jtf.setFont(Fonts.SMALL);
-    return new LabeledComponent<>(jtf, label, this);
+    jtf.setFont(font);
+    return new LabeledComponent<>(jtf, "", this);
   }
 
   protected LabeledComponent<JTextField> newTextField(String label, Font font, int x, int y) {
