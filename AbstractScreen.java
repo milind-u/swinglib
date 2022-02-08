@@ -203,7 +203,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
     final var jtf = new JTextField(WIDTH / 15);
     jtf.setBounds(bounds);
-    jtf.setFont(Fonts.SMALL);
+    jtf.setFont(font);
     return new LabeledComponent<>(jtf, label, this);
   }
 
