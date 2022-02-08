@@ -85,6 +85,29 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   }
 
+  private static class TextFieldWithPrompt extends JTextField {
+    private String prompt = "";
+    public TextFieldWithPrompt(int i) {
+      super(i);
+    }
+    public TextFieldWithPrompt(int i, String prompt) {
+      super(i);
+      this.prompt = prompt;
+    }
+    public void setPrompt(String prompt) {
+      this.prompt = prompt;
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      if (getText().isEmpty() && !(FocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == this)) {
+        Font font = getFont().deriveFont(Font.ITALIC);
+        g.setFont(font);
+        g.drawString(prompt, 5, font.getSize()); // figure out x, y from font's FontMetrics and size of component.
+      }
+    }
+  }
+
   private static final long serialVersionUID = 1L;
 
   public static final int WIDTH = 1300;
@@ -160,6 +183,21 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   protected JButton newButton(String text, int x, int y, Runnable onClick) {
     return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
         onClick);
+  }
+  protected JTextField newTextFieldWithPrompt(String label, Font font, Bounds bounds) {
+    final var jtf = new TextFieldWithPrompt(WIDTH / 15, label);
+    jtf.setBounds(bounds);
+    jtf.setFont(font);
+    add(jtf);
+    return jtf;
+  }
+
+  protected JTextField newTextFieldWithPrompt(String label, Font font, int x, int y) {
+    return newTextFieldWithPrompt(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
+  }
+
+  protected JTextField newTextFieldWithPrompt(String label, Font font, int y) {
+    return newTextFieldWithPrompt(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
   }
 
   protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
