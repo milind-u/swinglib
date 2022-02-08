@@ -181,10 +181,15 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     return newButton(text, Fonts.MEDIUM, bounds, onClick);
   }
 
-  protected JButton newButton(String text, int x, int y, Runnable onClick) {
-    return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
-        onClick);
+  protected JButton newButton(String text, Font font, int x, int y, Runnable onClick) {
+    int size = font.getSize();
+    return newButton(text, font, new Bounds(x, y, size * text.length() + fractionOfWidth(.01), size + fractionOfHeight(.04)), onClick);
   }
+
+  protected JButton newButton(String text, int x, int y, Runnable onClick) {
+    return newButton(text, Fonts.MEDIUM, x, y, onClick);
+  }
+  
   protected JTextField newTextFieldWithPrompt(String label, Font font, Bounds bounds) {
     final var jtf = new TextFieldWithPrompt(WIDTH / 15, label);
     jtf.setBounds(bounds);
