@@ -85,7 +85,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   }
 
-  public static class TextFieldWithPrompt extends JTextField {
+  private static class TextFieldWithPrompt extends JTextField {
     private String prompt = "";
     public TextFieldWithPrompt(int i) {
       super(i);
@@ -184,7 +184,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
         onClick);
   }
-  protected TextFieldWithPrompt newTextFieldWithPrompt(String label, Font font, Bounds bounds) {
+  protected JTextField newTextFieldWithPrompt(String label, Font font, Bounds bounds) {
     final var jtf = new TextFieldWithPrompt(WIDTH / 15, label);
     jtf.setBounds(bounds);
     jtf.setFont(font);
@@ -192,11 +192,11 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     return jtf;
   }
 
-  protected TextFieldWithPrompt newTextFieldWithPrompt(String label, Font font, int x, int y) {
+  protected JTextField newTextFieldWithPrompt(String label, Font font, int x, int y) {
     return newTextFieldWithPrompt(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
   }
 
-  protected TextFieldWithPrompt newTextFieldWithPrompt(String label, Font font, int y) {
+  protected JTextField newTextFieldWithPrompt(String label, Font font, int y) {
     return newTextFieldWithPrompt(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
   }
 
