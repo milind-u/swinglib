@@ -35,10 +35,8 @@ import javax.swing.text.DefaultCaret;
 public abstract class AbstractScreen extends JPanel implements ActionListener, Runnable {
 
   /**
-   * 
-   * @author milind
-   * 
    * Bounds of a component on the screen.
+   * @author milind
    */
   protected static class Bounds extends Rectangle {
 

@@ -12,9 +12,9 @@ public final class Log {
   private Log() {} // Don't let anyone instantiate
 
   /**
-   * @author milind
    * Severity levels for logging, used to filter out lower-level messages
    * once they are no longer needed
+   * @author milind
    */
   public static enum Severity {
     /**
