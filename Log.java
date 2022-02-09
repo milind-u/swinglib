@@ -4,8 +4,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
- * @author milind
  * Google-style logger to make debugging easier
+ * @author milind
  */
 public final class Log {
 

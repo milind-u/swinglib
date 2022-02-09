@@ -293,8 +293,8 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
   
   /**
-   * @author daichi
    * Creates a text field with a prompt inside the field
+   * @author daichi
    * @param label Text field label
    * @param font Text field and label font
    * @param bounds Bounding box of the field
@@ -309,8 +309,8 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
 
   /**
-   * @author daichi
    * Creates a text field with a prompt inside the field and standard dimensions
+   * @author daichi
    * @param label Text field label
    * @param font Text field and label font
    * @param x Text field x
@@ -322,9 +322,9 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
 
   /**
-   * @author daichi
    * Creates a text field with a prompt inside the field and standard dimensions, 
    * centered horizontally.
+   * @author daichi
    * @param label Text field label
    * @param font Text field and label font
    * @param y Text field y

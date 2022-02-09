@@ -4,10 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * @author milind
  * Class that implements a <code>toString</code> method for objects automatically.
  * Other classes can inherit from this one to automatically have a <code>toString</code>,
  * or they can call the static <code>toString</code> method below.
+ * @author milind
  */
 public abstract class Stringer {
 

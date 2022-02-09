@@ -1,8 +1,8 @@
 package swinglib;
 
 /**
- * @author milind
  * Class to hold two objects
+ * @author milind
  * @param <F> Class of first object
  * @param <S> Class of second object
  */

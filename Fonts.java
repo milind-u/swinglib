@@ -3,8 +3,8 @@ package swinglib;
 import java.awt.Font;
 
 /**
- * @author milind
  * Class with default fonts to use.
+ * @author milind
  */
 public final class Fonts {
 

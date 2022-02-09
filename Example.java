@@ -14,7 +14,7 @@ public final class Example {
    * JPanel example that adds people to a table
    * @author milind
    */
-  protected static class Screen extends AbstractScreen {
+  private static class Screen extends AbstractScreen {
     
     private static enum Age {
       CHILD, ADULT;

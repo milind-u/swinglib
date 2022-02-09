@@ -8,8 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 /**
- * @author milind
  * Class that wraps a component and adds a label to it
+ * @author milind
  * @param <C> Class of the component
  */
 public class LabeledComponent<C extends Component> extends JComponent {

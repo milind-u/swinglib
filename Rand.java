@@ -1,8 +1,8 @@
 package swinglib;
 
 /**
- * @author milind
  * Class that creates random integers
+ * @author milind
  */
 public class Rand {
 

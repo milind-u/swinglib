@@ -10,8 +10,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
- * @author milind
  * A class to play audio clips.
+ * @author milind
  */
 public class Audio {
 

@@ -1,8 +1,8 @@
 package swinglib;
 
 /**
- * @author milind
  * Class with various utility functions
+ * @author milind
  */
 public class Util {
 
