@@ -9,10 +9,18 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * A class to play audio clips.
+ * @author milind
+ */
 public class Audio {
 
   private final Clip clip;
 
+  /**
+   * Creates an audio object with the given file.
+   * @param path Path to audio file
+   */
   public Audio(String path) {
     clip = getClip(path);
   }
@@ -30,6 +38,9 @@ public class Audio {
     return c;
   }
 
+  /**
+   * Plays the audio clip. 
+   */
   public void play() {
     clip.start();
     clip.setFramePosition(0);
