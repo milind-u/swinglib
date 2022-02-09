@@ -26,13 +26,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
 /**
- * 
- * @author milind
- * 
  * Reusable utility class for swing Screen classes that extend JPanel and are for UIs.
  * Has many defaults for UI look so that they don't have to be repeated in every project,
- * and the developer can focus on the actual code instead of remaking a UI each project.
+ * and the developer can focus on the actual code instead of remaking a UI each project. 
+ * @author milind
  */
+// TODO(milind): make new* methods have consistent params order
 public abstract class AbstractScreen extends JPanel implements ActionListener, Runnable {
 
   /**
