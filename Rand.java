@@ -1,5 +1,9 @@
 package swinglib;
 
+/**
+ * @author milind
+ * Class that creates random integers
+ */
 public class Rand {
 
   private Rand() {} // Don't let anyone instantiate

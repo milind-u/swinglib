@@ -3,8 +3,20 @@ package swinglib;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+/**
+ * @author milind
+ * Class that implements a <code>toString</code> method for objects automatically.
+ * Other classes can inherit from this one to automatically have a <code>toString</code>,
+ * or they can call the static <code>toString</code> method below.
+ */
 public abstract class Stringer {
 
+  /**
+   * Returns a string with all fields of the object, including inherited ones.
+   * Format is the follwing: Class[field1=value1, field2=value2, ..., fieldn = valuen]
+   * @param o Object to stringify
+   * @return A string with the given object's data
+   */
   public static String toString(Object o) {
     final var sb = new StringBuffer(o.getClass().getName());
     sb.append('[');
