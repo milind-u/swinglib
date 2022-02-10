@@ -20,7 +20,12 @@ In less than 45 lines of code, it looks like this:
 - Extract the zip file into a folder called swinglib
 - Put the swinglib folder in your source code folder
   - Ex. if you had a project folder `my_project`, this would be located in `my_project/swinglib`
-- Create a `Screen` class that extends `AbstractScreen` just like in the [example](Example.java) 
+- Create a `Screen` class that extends `AbstractScreen` just like in the [example](Example.java)
+- Import `AbstractScreen` with 
+```java 
+import swinglib.AbstractScreen
+```
+- You can import other swinglib classes like that
 - Create a `Runner` class with a `main` that creates and runs a `Screen`, just like the `main` in the [example](Example.java) 
 
 ## Help
