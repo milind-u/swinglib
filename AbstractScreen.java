@@ -278,6 +278,20 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
 
   /**
+   * Creates a button with standard button size.
+   * @param text Button text
+   * @param font Text font
+   * @param x The button's x
+   * @param y The button's y
+   * @param onClick Function to be called on click
+   * @return The created button
+   */
+  protected JButton newButton(String text, Font font, int x, int y, Runnable onClick) {
+    int size = font.getSize();
+    return newButton(text, font, new Bounds(x, y, size * text.length() + fractionOfWidth(.01), size + fractionOfHeight(.04)), onClick);
+  }
+
+  /**
    * Creates a button with <code>Fonts.MEDIUM</code> and standard button size.
    * @param text Button text
    * @param x The button's x
@@ -286,10 +300,9 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @return The created button
    */
   protected JButton newButton(String text, int x, int y, Runnable onClick) {
-    return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
-        onClick);
+    return newButton(text, Fonts.MEDIUM, x, y, onClick);
   }
-  
+
   /**
    * Creates a text field with a prompt inside the field
    * @author daichi
