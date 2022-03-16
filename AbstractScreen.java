@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Objects;
-
+import java.util.Optional;
 import javax.swing.FocusManager;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,16 +26,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
 
 /**
- * Reusable utility class for swing Screen classes that extend JPanel and are for UIs.
- * Has many defaults for UI look so that they don't have to be repeated in every project,
- * and the developer can focus on the actual code instead of remaking a UI each project. 
+ * Reusable utility class for swing Screen classes that extend JPanel and are
+ * for UIs. Has many defaults for UI look so that they don't have to be repeated
+ * in every project, and the developer can focus on the actual code instead of
+ * remaking a UI each project.
+ *
  * @author milind
  */
 // TODO(milind): make new* methods have consistent params order
-public abstract class AbstractScreen extends JPanel implements ActionListener, Runnable {
+public abstract class AbstractScreen
+    extends JPanel implements ActionListener, Runnable {
 
   /**
    * Bounds of a component on the screen.
+   *
    * @author milind
    */
   protected static class Bounds extends Rectangle {
@@ -44,6 +48,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
     /**
      * Creates a bounds rectangle with the given dimensions.
+     *
      * @param x Top left x
      * @param y Top left y
      * @param width Width of rectangle
@@ -55,14 +60,23 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
     /**
      * Creates a horizontally-centered bounds rectangle.
+     *
      * @param y Top left y
      * @param width Width of rectangle
      * @param height Height of rectangle
      */
     public Bounds(int y, int width, int height) {
-      super(centeredX(width), y, width, height);
+      this(centeredX(width), y, width, height);
     }
 
+    /**
+     * Creates a bounds rectangle with the given rectangle's bounds.
+     *
+     * @param r Rectangle to copy
+     */
+    public Bounds(Rectangle r) {
+      this((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+    }
   }
 
   private static class TableModel extends DefaultTableModel {
@@ -79,7 +93,6 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     public boolean isCellEditable(int row, int column) {
       return false;
     }
-
   }
 
   private static class HashableButton extends JButton {
@@ -97,38 +110,44 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
     @Override
     public boolean equals(Object obj) {
-      return (obj.getClass() == getClass()) && (((HashableButton) obj).id == id);
+      return (obj.getClass() == getClass()) && (((HashableButton)obj).id == id);
     }
 
     @Override
     public int hashCode() {
       return Objects.hash(id);
     }
-
   }
 
   /**
    * @author daichi
    */
   private static class TextFieldWithPrompt extends JTextField {
-    private String prompt = "";
-    public TextFieldWithPrompt(int i) {
-      super(i);
-    }
+    private static final long serialVersionUID = 1L;
+
+    private String prompt;
+
     public TextFieldWithPrompt(int i, String prompt) {
       super(i);
       this.prompt = prompt;
     }
-    public void setPrompt(String prompt) {
+
+    @Override
+    public void setText(String prompt) {
       this.prompt = prompt;
     }
+
     @Override
     protected void paintComponent(Graphics g) {
       super.paintComponent(g);
-      if (getText().isEmpty() && !(FocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == this)) {
+      if (getText().isEmpty() &&
+          !(FocusManager.getCurrentKeyboardFocusManager().getFocusOwner() ==
+            this)) {
         Font font = getFont().deriveFont(Font.ITALIC);
         g.setFont(font);
-        g.drawString(prompt, 5, font.getSize()); // figure out x, y from font's FontMetrics and size of component.
+        g.drawString(prompt, 5,
+                     font.getSize()); // figure out x, y from font's FontMetrics
+                                      // and size of component.
       }
     }
   }
@@ -160,7 +179,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   /**
    * Standard height of buttons
    */
-  protected static final int STD_BUTTON_HEIGHT = HEIGHT / 7;
+  protected static final int STD_BUTTON_HEIGHT = HEIGHT / 14;
 
   /**
    * Standard background color
@@ -182,6 +201,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a screen with the given title.
+   *
    * @param title Title of the screen that will be displayed.
    */
   protected AbstractScreen(String title) {
@@ -193,33 +213,36 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Returns a fraction of the panel width
+   *
    * @param fraction Fraction of the width
    * @return The fraction of panel width
    */
   public static final int fractionOfWidth(double fraction) {
-    return (int) (WIDTH * fraction);
+    return (int)(WIDTH * fraction);
   }
 
   /**
    * Returns a fraction of the panel height
+   *
    * @param fraction Fraction of the height
    * @return The fraction of panel height
    */
   public static final int fractionOfHeight(double fraction) {
-    return (int) (HEIGHT * fraction);
+    return (int)(HEIGHT * fraction);
   }
 
   /**
-   * Computes the x for a rectangle with the given width to be horizontally-centered.
+   * Computes the x for a rectangle with the given width to be
+   * horizontally-centered.
+   *
    * @param width Width of the rectangle
    * @return Centered x for the given width.
    */
-  public static final int centeredX(int width) {
-    return (WIDTH - width) / 2;
-  }
+  public static final int centeredX(int width) { return (WIDTH - width) / 2; }
 
   /**
    * Sets the contents of the given fields to <code>null</code>.
+   *
    * @param fields Text fields to clear
    */
   protected static void clearTextFields(JTextField... fields) {
@@ -230,6 +253,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Checks if one of the given text fields is blank.
+   *
    * @param fields Text fields to check
    * @return <code>true</code> if one of the fields is blank.
    */
@@ -245,14 +269,56 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   }
 
   /**
+   * Attempts to parse an <code>int</code> from the given text field
+   *
+   * @param jtf Text field to parse
+   * @return The parsed <code>int</code>, or <code>Optional.empty()</code> if
+   *     the field was blank or
+   *         an <code>int</code> couldn't be parsed.
+   */
+  protected static Optional<Integer> parseInt(JTextField jtf) {
+    Optional<Integer> i = Optional.empty();
+    if (!fieldBlank(jtf)) {
+      try {
+        i = Optional.of(Integer.parseInt(jtf.getText()));
+      } catch (NumberFormatException e) {
+        i = Optional.empty();
+      }
+    }
+    return i;
+  }
+
+  /**
+   * Attempts to parse a <code>double</code> from the given text field
+   *
+   * @param jtf Text field to parse
+   * @return The parsed <code>double</code>, or <code>Optional.empty()</code> if
+   *     the field was blank
+   *         or a <code>double</code> couldn't be parsed.
+   */
+  protected static Optional<Double> parseDouble(JTextField jtf) {
+    Optional<Double> d = Optional.empty();
+    if (!fieldBlank(jtf)) {
+      try {
+        d = Optional.of(Double.parseDouble(jtf.getText()));
+      } catch (NumberFormatException e) {
+        d = Optional.empty();
+      }
+    }
+    return d;
+  }
+
+  /**
    * Creates a button
+   *
    * @param text Button text
    * @param font Text font
    * @param bounds Bounding box of the button
    * @param onClick Function to be called on click
    * @return The created button
    */
-  protected JButton newButton(String text, Font font, Bounds bounds, Runnable onClick) {
+  protected JButton newButton(String text, Font font, Bounds bounds,
+                              Runnable onClick) {
     final var jb = new HashableButton(text);
     jb.setBounds(bounds);
     jb.setFont(font);
@@ -268,6 +334,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a button with <code>Fonts.MEDIUM</code>
+   *
    * @param text Button text
    * @param bounds Bounding box of the button
    * @param onClick Function to be called on click
@@ -279,6 +346,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a button with <code>Fonts.MEDIUM</code> and standard button size.
+   *
    * @param text Button text
    * @param x The button's x
    * @param y The button's y
@@ -286,19 +354,22 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @return The created button
    */
   protected JButton newButton(String text, int x, int y, Runnable onClick) {
-    return newButton(text, Fonts.MEDIUM, new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
-        onClick);
+    return newButton(text, Fonts.MEDIUM,
+                     new Bounds(x, y, STD_BUTTON_WIDTH, STD_BUTTON_HEIGHT),
+                     onClick);
   }
-  
+
   /**
    * Creates a text field with a prompt inside the field
+   *
    * @author daichi
    * @param label Text field label
    * @param font Text field and label font
    * @param bounds Bounding box of the field
    * @return The created text field
    */
-  protected JTextField newTextFieldWithPrompt(String label, Font font, Bounds bounds) {
+  protected JTextField newTextFieldWithPrompt(String label, Font font,
+                                              Bounds bounds) {
     final var jtf = new TextFieldWithPrompt(WIDTH / 15, label);
     jtf.setBounds(bounds);
     jtf.setFont(font);
@@ -308,6 +379,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a text field with a prompt inside the field and standard dimensions
+   *
    * @author daichi
    * @param label Text field label
    * @param font Text field and label font
@@ -315,13 +387,17 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @param y Text field y
    * @return The created text field
    */
-  protected JTextField newTextFieldWithPrompt(String label, Font font, int x, int y) {
-    return newTextFieldWithPrompt(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
+  protected JTextField newTextFieldWithPrompt(String label, Font font, int x,
+                                              int y) {
+    return newTextFieldWithPrompt(
+        label, font,
+        new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
   }
 
   /**
-   * Creates a text field with a prompt inside the field and standard dimensions, 
-   * centered horizontally.
+   * Creates a text field with a prompt inside the field and standard
+   * dimensions, centered horizontally.
+   *
    * @author daichi
    * @param label Text field label
    * @param font Text field and label font
@@ -329,17 +405,20 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @return The created text field
    */
   protected JTextField newTextFieldWithPrompt(String label, Font font, int y) {
-    return newTextFieldWithPrompt(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
+    return newTextFieldWithPrompt(label, font, centeredX(STD_TEXT_FIELD_WIDTH),
+                                  y);
   }
 
   /**
    * Creates a text field with an external label
+   *
    * @param label Text field label
    * @param font Text field and label font
    * @param bounds Bounding box of the field
    * @return The created text field
    */
-  protected LabeledComponent<JTextField> newTextField(String label, Font font, Bounds bounds) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font,
+                                                      Bounds bounds) {
     final var jtf = new JTextField(WIDTH / 15);
     jtf.setBounds(bounds);
     jtf.setFont(font);
@@ -348,30 +427,37 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a text field with an external label and standard dimensions.
+   *
    * @param label Text field label
    * @param font Text field and label font
    * @param x Text field x
    * @param y Text field y
    * @return The created text field
    */
-  protected LabeledComponent<JTextField> newTextField(String label, Font font, int x, int y) {
-    return newTextField(label, font, new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
+  protected LabeledComponent<JTextField> newTextField(String label, Font font,
+                                                      int x, int y) {
+    return newTextField(
+        label, font,
+        new Bounds(x, y, STD_TEXT_FIELD_WIDTH, STD_TEXT_FIELD_HEIGHT));
   }
 
   /**
    * Creates a text field with an external label and standard dimensions,
    * centered horizontally.
+   *
    * @param label Text field label
    * @param font Text field and label font
    * @param y Text field y
    * @return The created text field
    */
-  protected LabeledComponent<JTextField> newTextField(String label, Font font, int y) {
+  protected LabeledComponent<JTextField> newTextField(String label, Font font,
+                                                      int y) {
     return newTextField(label, font, centeredX(STD_TEXT_FIELD_WIDTH), y);
   }
 
   /**
    * Creates a text area
+   *
    * @param font Text area font
    * @param bounds Bounding box of the area
    * @return The created text area
@@ -381,23 +467,26 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
     jta.setFont(font);
     jta.setEditable(false);
     jta.setBounds(bounds);
+    jta.setBackground(BG_COLOR);
     add(jta);
     return jta;
   }
 
   /**
    * Creates a text area with a scrollbar
+   *
    * @param font Text area font
    * @param bounds Bounding box of the area
    * @return The created text area and scroll pane
    */
-  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font, Bounds bounds) {
+  protected Pair<JTextArea, JScrollPane> newScrollableTextArea(Font font,
+                                                               Bounds bounds) {
     final var jta = new JTextArea();
     jta.setFont(font);
     jta.setEditable(false);
     final var jsp = new JScrollPane(jta);
     jsp.setBounds(bounds);
-    final var caret = (DefaultCaret) jta.getCaret();
+    final var caret = (DefaultCaret)jta.getCaret();
     caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
     add(jsp);
     return new Pair<>(jta, jsp);
@@ -405,14 +494,15 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a spinner with a label
+   *
    * @param label Spinner label
    * @param font Spinner font
    * @param bounds Bounding box of the spinner
    * @param model Spinner model
    * @return The created spinner with a label
    */
-  protected LabeledComponent<JSpinner> newSpinner(String label, Font font, Bounds bounds,
-      SpinnerModel model) {
+  protected LabeledComponent<JSpinner>
+  newSpinner(String label, Font font, Bounds bounds, SpinnerModel model) {
     final var js = new JSpinner(model);
     js.setBounds(bounds);
     js.setFont(font);
@@ -421,6 +511,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a label
+   *
    * @param text Label text
    * @param font Label font
    * @param bounds Bounding box of the label
@@ -436,13 +527,14 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a scrollable table
+   *
    * @param font Table font
    * @param bounds Bounding box of the table
    * @param cols Column labels of the table
    * @return The created table, along with it's model and scroll pane
    */
-  protected Triplet<JTable, DefaultTableModel, JScrollPane> newTable(Font font, Bounds bounds,
-      Object... cols) {
+  protected Triplet<JTable, DefaultTableModel, JScrollPane>
+  newTable(Font font, Bounds bounds, Object... cols) {
     final var table = initTable(font, bounds, cols);
     add(table.getThird());
     return table;
@@ -450,6 +542,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a scrollable table with a label
+   *
    * @param font Table font
    * @param labelFont Label font
    * @param label Table label
@@ -457,24 +550,28 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @param cols Column labels of the table
    * @return The created table, along with it's model and labeled scroll pane
    */
-  protected Triplet<JTable, DefaultTableModel, LabeledComponent<JScrollPane>> newLabeledTable(
-      Font font, Font labelFont, String label, Bounds bounds, Object... cols) {
+  protected Triplet<JTable, DefaultTableModel, LabeledComponent<JScrollPane>>
+  newLabeledTable(Font font, Font labelFont, String label, Bounds bounds,
+                  Object... cols) {
     final var table = initTable(font, bounds, cols);
-    return new Triplet<>(table.getFirst(), table.getSecond(),
-        new LabeledComponent<>(table.getThird(), label, labelFont, this,
-            bounds.x - LabeledComponent.bufferedStringWidth(label, labelFont) / 2,
+    return new Triplet<>(
+        table.getFirst(), table.getSecond(),
+        new LabeledComponent<>(
+            table.getThird(), label, labelFont, this,
+            bounds.x -
+                LabeledComponent.bufferedStringWidth(label, labelFont) / 2,
             bounds.y - LabeledComponent.bufferedStringHeight(labelFont)));
   }
 
-  private Triplet<JTable, DefaultTableModel, JScrollPane> initTable(Font font, Bounds bounds,
-      Object... cols) {
+  private Triplet<JTable, DefaultTableModel, JScrollPane>
+  initTable(Font font, Bounds bounds, Object... cols) {
     final var tm = new TableModel(cols);
 
     final var jt = new JTable(tm);
     jt.setRowSelectionAllowed(false);
     jt.getTableHeader().setFont(font);
     jt.setFont(font);
-    jt.setRowHeight((int) (font.getSize() * 1.75));
+    jt.setRowHeight((int)(font.getSize() * 1.75));
 
     final var jsp = new JScrollPane(jt);
     jsp.setBounds(bounds);
@@ -484,6 +581,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Creates a combo box with a label
+   *
    * @param <E> Class of the combo box items
    * @param label Box label
    * @param font Box font
@@ -492,8 +590,8 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
    * @return The created labeled combo box
    */
   @SafeVarargs
-  public final <E> LabeledComponent<JComboBox<E>> newComboBox(String label, Font font,
-      Bounds bounds, E... items) {
+  public final <E> LabeledComponent<JComboBox<E>>
+  newComboBox(String label, Font font, Bounds bounds, E... items) {
     final var jcb = new JComboBox<>(items);
     jcb.setFont(font);
     jcb.setBounds(bounds);
@@ -520,6 +618,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Draws a string horizontally centered
+   *
    * @param g Graphics to draw with
    * @param s String to draw
    * @param y The y at the bottom of the drawn string
@@ -533,7 +632,8 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   @Override
   public void actionPerformed(ActionEvent e) {
     final var r = onClicks.get(e.getSource());
-    // Make sure that the key was a button with an on click, and was not mapped to a null Runnable
+    // Make sure that the key was a button with an on click, and was not mapped
+    // to a null Runnable
     if (r != null) {
       r.run();
     }
@@ -547,6 +647,7 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
 
   /**
    * Starts up the screen with the given window title.
+   *
    * @param frameTitle Window title
    */
   public void run(String frameTitle) {
@@ -562,5 +663,4 @@ public abstract class AbstractScreen extends JPanel implements ActionListener, R
   public void run() {
     run(title);
   }
-
 }

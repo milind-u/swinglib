@@ -2,6 +2,7 @@ package swinglib;
 
 /**
  * Class with various utility functions
+ *
  * @author milind
  */
 public class Util {
@@ -10,6 +11,7 @@ public class Util {
 
   /**
    * Wraps i around 0 or max if it is past either
+   *
    * @param i Integer to wrap
    * @param max Maximum value
    * @return Wrapped value of the given integer
@@ -25,8 +27,8 @@ public class Util {
   }
 
   /**
-   * Sets the given integer to either side 
-   * of the given bounds if it is past one
+   * Sets the given integer to either side of the given bounds if it is past one
+   *
    * @param i Integer to clamp
    * @param min Minumum value
    * @param max Maximum value
@@ -36,4 +38,15 @@ public class Util {
     return Math.max(Math.min(i, max - 1), min);
   }
 
+  /**
+   * Checks if the given integer is in the range <code>[min, max)</code>
+   *
+   * @param i Integer to check
+   * @param min Minimum value
+   * @param max Maximum value
+   * @return Whether the given integer is the the given range
+   */
+  public static boolean inRange(int i, int min, int max) {
+    return ((i >= min) && (i < max));
+  }
 }
